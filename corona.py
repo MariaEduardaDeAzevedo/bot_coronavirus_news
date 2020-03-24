@@ -88,8 +88,10 @@ def att(api):
     retweet(oms_br, api)
 
 #Autenticação
-auth = tweepy.OAuthHandler("CTQ2DakDrJpoesVJbw94AIYzr", "WSRTe9gdDaFYnqOPWg9DzCHuSkDfGHSgiWHGqIQCziXFqrScqm")
-auth.set_access_token("1221116870939627520-YCsoSz81yHWnygblES9Dn1kCkURC4S", "xkBEzL8sqhDXI9VlJ3BRhGOHvehwKpqmOgZcHg1lyTqjY")
+#inserir as chaves dadas na sua conta de desenvolvedor abaixo, elas irão
+#te dar o acesso direto à API do Twitter
+auth = tweepy.OAuthHandler("consumer_key", "consumer_secret")
+auth.set_access_token("key", "secret")
 
 #Twitter API
 api = tweepy.API(auth)
