@@ -101,7 +101,7 @@ api = tweepy.API(auth)
 last_status = tweet()
 #Primeiro relatório
 try:
-    api.update_with_media(generate_graf(), new_status)
+    api.update_with_media(generate_graf(), last_status)
 except:
     print("ocorreu um erro")
 while True:
