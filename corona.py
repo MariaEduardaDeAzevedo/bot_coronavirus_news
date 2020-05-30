@@ -4,6 +4,7 @@ from datetime import datetime
 from time import sleep
 import requests
 import json
+import matplotlib.pyplot as plt
 from graf import generate_graf
 
 #Acessa a API de dados sobre a doença
@@ -12,7 +13,7 @@ def get_data():
 
     headers = {
     'x-rapidapi-host': "coronavirus-monitor.p.rapidapi.com",
-    'x-rapidapi-key': "8d56b929a4msh4e243a8667ce102p106a6cjsn10327daff739"
+    'x-rapidapi-key': "chave de acesso aqui"
     }
 
     response = requests.request("GET", url, headers=headers)
@@ -59,7 +60,6 @@ def tweet():
     recovered = data["total_recovered"]
     new = data["new_cases"]
     qnt_1m = data["total_cases_per_1m_population"]
-    hour = 21 + datetime.now().hour if datetime.now().hour < 3 else datetime.now().hour - 3
     text = """Coronavírus no Brasil:
     
 
@@ -93,17 +93,24 @@ def att(api):
     retweet(oms_br, api)
 
 #Autenticação
-auth = tweepy.OAuthHandler("consumer_key", "consumer_secret")
-auth.set_access_token("key", "secret")
+#Coloque as chaves de acesso
+auth = tweepy.OAuthHandler("", "") 
+auth.set_access_token("", "")
 
 #API
 api = tweepy.API(auth)
 last_status = tweet()
 #Primeiro relatório
+
+generate_graf()
+plt.legend(loc='upper left', ncol=1)
+
 try:
-    api.update_with_media(generate_graf(), new_status)
+    generate_graf()
+    api.update_with_media("graf.png", last_status)
 except:
     print("ocorreu um erro")
+
 while True:
 
     try:
@@ -111,7 +118,12 @@ while True:
         new_status = tweet()
         print(new_status)
         if last_status != new_status:
-            api.update_with_media(generate_graf(), new_status)
+            plt.clf()
+            plt.cla()
+            generate_graf()
+            api.update_with_media("graf.png", new_status)
+            plt.cla()
+            plt.close()
             last_status = new_status
             print("novo relatório postado", datetime.now())
     except:
@@ -119,9 +131,12 @@ while True:
 
     print("pausa", datetime.now())
     #Pausa na execução
-    sleep(180)
+    sleep(300)
     #Retorno da execução
     print("retorno", datetime.now())
     
     #Atualização da timeline
-    att(api)
+    try:
+        att(api)
+    except:
+        print("ocorreu um erro")
